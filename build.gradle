@@ -296,7 +296,7 @@ subprojects { subproject ->
     if (subproject.name in ['grails-dependencies', 'grails-bom']) return
 
     dependencies {
-        implementation platform(project(':grails-bom'))
+        api platform(project(':grails-bom'))
     }
 
     if (subproject.name =~ /^(grails-web|grails-plugin-|grails-test-suite|grails-test)/) {
