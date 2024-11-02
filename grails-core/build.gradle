@@ -23,7 +23,7 @@ dependencies {
     api project(":grails-bootstrap")
     api project(":grails-spring")
 
-    api "org.grails:grails-datastore-core"
+    api "org.grails:grails-datastore-core:${project['grails-datastore.version']}"
 
     testImplementation "org.springframework:spring-jdbc"
 
