@@ -6,5 +6,5 @@ Experienced while upgrading modules for Grails 7
   - https://github.com/grails/gorm-hibernate5/pull/910/commits/c8de45df204966ccc228b46b94beeb2142ae0f59 
 - [GROOVY-10621](https://issues.apache.org/jira/browse/GROOVY-10621) 
   - Primitive booleans will no longer generate the form of isProperty & getProperty.  They will only generate isProperty()
-- [GROOVY-5169](https://issues.apache.org/jira/browse/GROOVY-5169)
+- [GROOVY-5169](https://issues.apache.org/jira/browse/GROOVY-5169)  [GROOVY-10449](https://issues.apache.org/jira/browse/GROOVY-10449)
   - Fields with a public modifier were not considered a property in groovy 3, but are now. 
