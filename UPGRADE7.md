@@ -1,4 +1,4 @@
-# Common 7.0 Upgrade Gotchas
+# Common 7.0 Upgrade Gotchas - DRAFT -
 
 Experienced while upgrading modules for Grails 7
 
@@ -8,3 +8,5 @@ Experienced while upgrading modules for Grails 7
   - Primitive booleans will no longer generate the form of isProperty & getProperty.  They will only generate isProperty()
 - [GROOVY-5169](https://issues.apache.org/jira/browse/GROOVY-5169)  [GROOVY-10449](https://issues.apache.org/jira/browse/GROOVY-10449)
   - Fields with a public modifier were not returned with MetaClassImpl#getProperties() in groovy 3, but are now. 
+
+## NOTE: This document is a copied draft and the explanations are only highlights and will be expanded further prior to release of 7.0.
