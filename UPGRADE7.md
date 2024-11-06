@@ -7,4 +7,4 @@ Experienced while upgrading modules for Grails 7
 - [GROOVY-10621](https://issues.apache.org/jira/browse/GROOVY-10621) 
   - Primitive booleans will no longer generate the form of isProperty & getProperty.  They will only generate isProperty()
 - [GROOVY-5169](https://issues.apache.org/jira/browse/GROOVY-5169)  [GROOVY-10449](https://issues.apache.org/jira/browse/GROOVY-10449)
-  - Fields with a public modifier were not considered a property in groovy 3, but are now. 
+  - Fields with a public modifier were not returned with MetaClassImpl#getProperties() in groovy 3, but are now. 
