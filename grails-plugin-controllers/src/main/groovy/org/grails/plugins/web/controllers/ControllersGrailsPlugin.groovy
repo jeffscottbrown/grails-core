@@ -23,7 +23,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.plugins.web.servlet.context.BootStrapClassRunner
-import org.grails.config.http.GrailsFilters
+import org.grails.spring.config.http.GrailsFilters
 import org.grails.web.errors.GrailsExceptionResolver
 import org.grails.web.filters.HiddenHttpMethodFilter
 import org.grails.web.servlet.mvc.GrailsDispatcherServlet
