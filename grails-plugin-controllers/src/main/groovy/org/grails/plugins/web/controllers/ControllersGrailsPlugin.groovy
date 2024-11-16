@@ -23,25 +23,19 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.plugins.web.servlet.context.BootStrapClassRunner
-import org.grails.spring.config.http.GrailsFilters
 import org.grails.web.errors.GrailsExceptionResolver
-import org.grails.web.filters.HiddenHttpMethodFilter
 import org.grails.web.servlet.mvc.GrailsDispatcherServlet
-import org.grails.web.servlet.mvc.GrailsWebRequestFilter
 import org.grails.web.servlet.mvc.TokenResponseActionResultTransformer
 import org.grails.web.servlet.view.CompositeViewResolver
 import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.util.ClassUtils
-import org.springframework.web.filter.CharacterEncodingFilter
 import org.springframework.web.multipart.support.StandardServletMultipartResolver
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
-import jakarta.servlet.DispatcherType
 import jakarta.servlet.MultipartConfigElement
 
 /**
@@ -71,8 +65,6 @@ class ControllersGrailsPlugin extends Plugin {
         long maxFileSize = config.getProperty(Settings.CONTROLLERS_UPLOAD_MAX_FILE_SIZE, Long, 128000L)
         long maxRequestSize = config.getProperty(Settings.CONTROLLERS_UPLOAD_MAX_REQUEST_SIZE, Long, 128000L)
         int fileSizeThreashold = config.getProperty(Settings.CONTROLLERS_UPLOAD_FILE_SIZE_THRESHOLD, Integer, 0)
-        String filtersEncoding = config.getProperty(Settings.FILTER_ENCODING, 'utf-8')
-        boolean filtersForceEncoding = config.getProperty(Settings.FILTER_FORCE_ENCODING, Boolean, false)
         boolean isTomcat = ClassUtils.isPresent("org.apache.catalina.startup.Tomcat", application.classLoader)
         String grailsServletPath = config.getProperty(Settings.WEB_SERVLET_PATH, isTomcat ? Settings.DEFAULT_TOMCAT_SERVLET_PATH : Settings.DEFAULT_WEB_SERVLET_PATH)
         int resourcesCachePeriod = config.getProperty(Settings.RESOURCES_CACHE_PERIOD, Integer, 0)
@@ -84,34 +76,6 @@ class ControllersGrailsPlugin extends Plugin {
         }
 
         tokenResponseActionResultTransformer(TokenResponseActionResultTransformer)
-
-        def catchAllMapping = [Settings.DEFAULT_WEB_SERVLET_PATH]
-
-        characterEncodingFilter(FilterRegistrationBean) {
-            filter = bean(CharacterEncodingFilter) {
-                encoding = filtersEncoding
-                forceEncoding = filtersForceEncoding
-            }
-            urlPatterns = catchAllMapping
-            order = GrailsFilters.CHARACTER_ENCODING_FILTER.order
-        }
-
-        hiddenHttpMethodFilter(FilterRegistrationBean) {
-            filter = bean(HiddenHttpMethodFilter)
-            urlPatterns = catchAllMapping
-            order = GrailsFilters.HIDDEN_HTTP_METHOD_FILTER.order
-        }
-
-        grailsWebRequestFilter(FilterRegistrationBean) {
-            filter = bean(GrailsWebRequestFilter)
-            urlPatterns = catchAllMapping
-            order = GrailsFilters.GRAILS_WEB_REQUEST_FILTER.order
-            dispatcherTypes = EnumSet.of(
-                    DispatcherType.FORWARD,
-                    DispatcherType.INCLUDE,
-                    DispatcherType.REQUEST
-            )
-        }
 
         exceptionHandler(GrailsExceptionResolver) {
             exceptionMappings = ['java.lang.Exception': '/error']
