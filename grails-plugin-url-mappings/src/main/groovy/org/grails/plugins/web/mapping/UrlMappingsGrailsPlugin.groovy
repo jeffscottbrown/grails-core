@@ -75,7 +75,11 @@ class UrlMappingsGrailsPlugin extends Plugin {
                 targetSource = urlMappingsTargetSource
                 proxyInterfaces = [UrlMappings]
              }
-         }
+        } else {
+            grailsUrlMappingsHolder(UrlMappingsHolderFactoryBean) { bean ->
+                bean.lazyInit = true
+            }
+        }
     }}
 
     @Override

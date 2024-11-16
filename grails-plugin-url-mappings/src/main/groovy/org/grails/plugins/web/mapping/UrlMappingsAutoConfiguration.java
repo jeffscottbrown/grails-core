@@ -63,12 +63,6 @@ public class UrlMappingsAutoConfiguration {
         return new GrailsCorsFilter(grailsCorsConfiguration);
     }
 
-    @Bean("grailsUrlMappingsHolder")
-    @Conditional(NonLiveReloadEnabledCondition.class)
-    public UrlMappingsHolderFactoryBean grailsUrlMappingsHolderNonLiveReload() {
-        return new UrlMappingsHolderFactoryBean();
-    }
-
     @Bean
     public UrlMappingsErrorPageCustomizer urlMappingsErrorPageCustomizer(ObjectProvider<UrlMappings> urlMappingsProvider) {
         UrlMappingsErrorPageCustomizer errorPageCustomizer = new UrlMappingsErrorPageCustomizer();
@@ -79,12 +73,5 @@ public class UrlMappingsAutoConfiguration {
     @Bean
     public UrlMappingsInfoHandlerAdapter urlMappingsInfoHandlerAdapter() {
         return new UrlMappingsInfoHandlerAdapter();
-    }
-
-    public static class NonLiveReloadEnabledCondition implements Condition {
-        @Override
-        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return !(Environment.isDevelopmentMode() || Environment.getCurrent().isReloadEnabled());
-        }
     }
 }
