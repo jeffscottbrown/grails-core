@@ -51,7 +51,7 @@ public class UrlMappingsAutoConfiguration {
     @Bean
     public LinkGenerator grailsLinkGenerator() {
         if (cacheUrls == null) {
-            cacheUrls = !Environment.isDevelopmentMode() || Environment.getCurrent().isReloadEnabled();
+            cacheUrls = !Environment.isDevelopmentMode() && !Environment.getCurrent().isReloadEnabled();
         }
         return cacheUrls? new CachingLinkGenerator(serverURL) : new DefaultLinkGenerator(serverURL);
     }
