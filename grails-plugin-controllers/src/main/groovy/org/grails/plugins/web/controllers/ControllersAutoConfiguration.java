@@ -10,14 +10,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.EnumSet;
 
-@AutoConfiguration(before = { WebMvcAutoConfiguration.class })
+@AutoConfiguration(before = { HttpEncodingAutoConfiguration.class, WebMvcAutoConfiguration.class })
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ControllersAutoConfiguration {
 
@@ -28,16 +31,14 @@ public class ControllersAutoConfiguration {
     private boolean filtersForceEncoding;
 
     @Bean
-    @ConditionalOnMissingBean(HiddenHttpMethodFilter.class)
-    public FilterRegistrationBean<Filter> characterEncodingFilter() {
+    @ConditionalOnMissingBean(CharacterEncodingFilter.class)
+    public CharacterEncodingFilter characterEncodingFilter() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        OrderedCharacterEncodingFilter characterEncodingFilter = new OrderedCharacterEncodingFilter();
         characterEncodingFilter.setEncoding(filtersEncoding);
         characterEncodingFilter.setForceEncoding(filtersForceEncoding);
-        registrationBean.setFilter(characterEncodingFilter);
-        registrationBean.addUrlPatterns(Settings.DEFAULT_WEB_SERVLET_PATH);
-        registrationBean.setOrder(GrailsFilters.CHARACTER_ENCODING_FILTER.getOrder());
-        return registrationBean;
+        characterEncodingFilter.setOrder(GrailsFilters.CHARACTER_ENCODING_FILTER.getOrder());
+        return characterEncodingFilter;
     }
 
     @Bean
