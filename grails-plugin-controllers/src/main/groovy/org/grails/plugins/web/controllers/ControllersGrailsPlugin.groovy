@@ -81,8 +81,6 @@ class ControllersGrailsPlugin extends Plugin {
             exceptionMappings = ['java.lang.Exception': '/error']
         }
 
-        multipartResolver(StandardServletMultipartResolver)
-
         "${CompositeViewResolver.BEAN_NAME}"(CompositeViewResolver)
 
         multipartConfigElement(MultipartConfigElement, uploadTmpDir, maxFileSize, maxRequestSize, fileSizeThreashold)
