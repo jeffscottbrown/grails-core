@@ -11,7 +11,6 @@ import grails.web.mapping.cors.GrailsCorsConfiguration;
 import grails.web.mapping.cors.GrailsCorsFilter;
 import org.grails.web.mapping.CachingLinkGenerator;
 import org.grails.web.mapping.DefaultLinkGenerator;
-import org.grails.web.mapping.UrlMappingsHolderFactoryBean;
 import org.grails.web.mapping.mvc.UrlMappingsInfoHandlerAdapter;
 import org.grails.web.mapping.servlet.UrlMappingsErrorPageCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
@@ -22,7 +21,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
-import org.springframework.core.type.AnnotatedTypeMetadata;
 
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
