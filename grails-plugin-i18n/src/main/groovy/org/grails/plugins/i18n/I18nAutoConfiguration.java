@@ -36,8 +36,7 @@ public class I18nAutoConfiguration {
     @Value("${" + Settings.I18N_FILE_CACHE_SECONDS + ":5}")
     private int fileCacheSeconds;
 
-    @Bean
-    @ConditionalOnMissingBean(name = DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)
+    @Bean(DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)
     public LocaleResolver localeResolver() {
         return new SessionLocaleResolver();
     }
