@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfig
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -53,9 +54,11 @@ public class ControllersAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(GrailsWebRequestFilter.class)
-    public FilterRegistrationBean<Filter> grailsWebRequestFilter() {
+    public FilterRegistrationBean<Filter> grailsWebRequestFilter(ApplicationContext applicationContext) {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new GrailsWebRequestFilter());
+        GrailsWebRequestFilter grailsWebRequestFilter = new GrailsWebRequestFilter();
+        grailsWebRequestFilter.setApplicationContext(applicationContext);
+        registrationBean.setFilter(grailsWebRequestFilter);
         registrationBean.setDispatcherTypes(EnumSet.of(
                 DispatcherType.FORWARD,
                 DispatcherType.INCLUDE,
