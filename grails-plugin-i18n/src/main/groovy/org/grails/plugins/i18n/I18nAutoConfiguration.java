@@ -21,6 +21,7 @@ public class I18nAutoConfiguration {
         return new SessionLocaleResolver();
     }
 
+    @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         ParamsAwareLocaleChangeInterceptor localeChangeInterceptor = new ParamsAwareLocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
