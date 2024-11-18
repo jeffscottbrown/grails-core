@@ -63,8 +63,6 @@ class I18nGrailsPlugin extends Plugin {
         localeChangeInterceptor(ParamsAwareLocaleChangeInterceptor) {
             paramName = "lang"
         }
-
-        localeResolver(SessionLocaleResolver)
     }}
 
     @Override
