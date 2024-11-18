@@ -59,10 +59,6 @@ class I18nGrailsPlugin extends Plugin {
             }
             defaultEncoding = encoding
         }
-
-        localeChangeInterceptor(ParamsAwareLocaleChangeInterceptor) {
-            paramName = "lang"
-        }
     }}
 
     @Override
