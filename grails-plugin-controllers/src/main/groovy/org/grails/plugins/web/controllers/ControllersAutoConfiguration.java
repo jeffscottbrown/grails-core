@@ -3,7 +3,7 @@ package org.grails.plugins.web.controllers;
 import grails.config.Settings;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
-import org.grails.spring.config.http.GrailsFilters;
+import org.grails.web.config.http.GrailsFilters;
 import org.grails.web.filters.HiddenHttpMethodFilter;
 import org.grails.web.servlet.mvc.GrailsWebRequestFilter;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.EnumSet;
