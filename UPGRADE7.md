@@ -21,7 +21,7 @@ Experienced while upgrading modules for Grails 7
 - Lightweight, Removal of numerous dependencies.
 - grails-bom overhaul for keeping depedencies up to date and in sync.
 - g:form now automatically provides csrf protection when Spring Security CSRF is enabled.
-- Massive decoupling of dependencies and cleanup between modules.  SiteMesh dependencies is no longer compiled into controllers fused between numerous modules. SiteMesh isn't even required to use Grails!
+- Massive decoupling of dependencies and cleanup between modules.  SiteMesh dependencies are no longer compiled into controllers fused between numerous modules. SiteMesh isn't even required to use Grails!
 - SiteMesh ahs been upgrade to SiteMesh 3!
 - Completely up to date modern stack that has been optimized for easier future transitions.
 - GSP can now be used OUTSIDE of Grails! see grails-boot
