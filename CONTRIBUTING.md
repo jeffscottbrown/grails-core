@@ -127,7 +127,7 @@ If you're interested in contributing fixes and features to any part of grails, y
 * A git client
 * An Editor such as [IntelliJ](https://www.jetbrains.com/idea/).  
 
-Once you have the pre-requisite packages installed, the next step is to download the Grails source code, which is hosted at [GitHub](http://github.com) in several repositories owned by the http://github.com/grails["grails" GitHub user]. This is a simple case of cloning the repository you're interested in. For example, to get the core framework run:
+Once you have the pre-requisite packages installed, the next step is to download the Grails source code, which is hosted at [GitHub](http://github.com) in several repositories owned by the ["grails" GitHub user](http://github.com/grails). This is a simple case of cloning the repository you're interested in. For example, to get the core framework run:
 
     git clone http://github.com/grails/grails-core.git
 
