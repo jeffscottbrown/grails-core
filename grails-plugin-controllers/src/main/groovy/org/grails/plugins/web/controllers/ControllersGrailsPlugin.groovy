@@ -19,7 +19,6 @@ import grails.config.Settings
 import grails.core.GrailsControllerClass
 import grails.plugins.Plugin
 import grails.util.GrailsUtil
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.plugins.web.servlet.context.BootStrapClassRunner
@@ -31,9 +30,6 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.util.ClassUtils
-import org.springframework.web.multipart.support.StandardServletMultipartResolver
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import jakarta.servlet.MultipartConfigElement
@@ -67,9 +63,6 @@ class ControllersGrailsPlugin extends Plugin {
         int fileSizeThreashold = config.getProperty(Settings.CONTROLLERS_UPLOAD_FILE_SIZE_THRESHOLD, Integer, 0)
         boolean isTomcat = ClassUtils.isPresent("org.apache.catalina.startup.Tomcat", application.classLoader)
         String grailsServletPath = config.getProperty(Settings.WEB_SERVLET_PATH, isTomcat ? Settings.DEFAULT_TOMCAT_SERVLET_PATH : Settings.DEFAULT_WEB_SERVLET_PATH)
-        int resourcesCachePeriod = config.getProperty(Settings.RESOURCES_CACHE_PERIOD, Integer, 0)
-        boolean resourcesEnabled = config.getProperty(Settings.RESOURCES_ENABLED, Boolean, true)
-        String resourcesPattern = config.getProperty(Settings.RESOURCES_PATTERN, String, Settings.DEFAULT_RESOURCE_PATTERN)
 
         if (!Boolean.parseBoolean(System.getProperty(Settings.SETTING_SKIP_BOOTSTRAP))) {
             bootStrapClassRunner(BootStrapClassRunner)
@@ -92,9 +85,6 @@ class ControllersGrailsPlugin extends Plugin {
         // allow @Controller annotated beans
         annotationHandlerMapping(RequestMappingHandlerMapping, interceptorsClosure)
         annotationHandlerAdapter(RequestMappingHandlerAdapter)
-
-        // add Grails webmvc config
-        webMvcConfig(GrailsWebMvcConfigurer, resourcesCachePeriod, resourcesEnabled, resourcesPattern)
 
         // add the dispatcher servlet
         dispatcherServlet(GrailsDispatcherServlet)
@@ -128,55 +118,6 @@ class ControllersGrailsPlugin extends Plugin {
         }
     } }
 
-
-    @CompileStatic
-    static class GrailsWebMvcConfigurer implements WebMvcConfigurer {
-
-        private static final String[] SERVLET_RESOURCE_LOCATIONS = [ "/" ]
-
-        private static final String[] CLASSPATH_RESOURCE_LOCATIONS = [
-            "classpath:/META-INF/resources/", "classpath:/resources/",
-            "classpath:/static/", "classpath:/public/" ]
-
-        private static final String[] RESOURCE_LOCATIONS
-        static {
-            RESOURCE_LOCATIONS = new String[CLASSPATH_RESOURCE_LOCATIONS.length
-                    + SERVLET_RESOURCE_LOCATIONS.length]
-            System.arraycopy(SERVLET_RESOURCE_LOCATIONS, 0, RESOURCE_LOCATIONS, 0,
-                    SERVLET_RESOURCE_LOCATIONS.length)
-            System.arraycopy(CLASSPATH_RESOURCE_LOCATIONS, 0, RESOURCE_LOCATIONS,
-                    SERVLET_RESOURCE_LOCATIONS.length, CLASSPATH_RESOURCE_LOCATIONS.length);
-        }
-
-        boolean addMappings = true
-        Integer cachePeriod
-        String resourcesPattern
-
-        GrailsWebMvcConfigurer(Integer cachePeriod, boolean addMappings = true, String resourcesPattern = '/static/**') {
-            this.addMappings = addMappings
-            this.cachePeriod = cachePeriod
-            this.resourcesPattern = resourcesPattern
-        }
-
-        @Override
-        public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            if (!addMappings) {
-                return
-            }
-
-            if (!registry.hasMappingForPattern("/webjars/**")) {
-                registry.addResourceHandler("/webjars/**")
-                        .addResourceLocations("classpath:/META-INF/resources/webjars/")
-                        .setCachePeriod(cachePeriod)
-            }
-            if (!registry.hasMappingForPattern(resourcesPattern)) {
-                registry.addResourceHandler(resourcesPattern)
-                        .addResourceLocations(RESOURCE_LOCATIONS)
-                        .setCachePeriod(cachePeriod)
-            }
-        }
-    }
-
     @Override
     void onChange( Map<String, Object> event) {
         if (!(event.source instanceof Class)) {
@@ -205,5 +146,4 @@ class ControllersGrailsPlugin extends Plugin {
             }
         }
     }
-
 }

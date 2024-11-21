@@ -17,6 +17,8 @@ import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilte
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.EnumSet;
 
@@ -29,6 +31,15 @@ public class ControllersAutoConfiguration {
 
     @Value("${" + Settings.FILTER_FORCE_ENCODING + ":false}")
     private boolean filtersForceEncoding;
+
+    @Value("${" + Settings.RESOURCES_CACHE_PERIOD + ":0}")
+    int resourcesCachePeriod;
+
+    @Value("${" + Settings.RESOURCES_ENABLED + ":true}")
+    boolean resourcesEnabled;
+
+    @Value("${" + Settings.RESOURCES_PATTERN + ":"+Settings.DEFAULT_RESOURCE_PATTERN+"}")
+    String resourcesPattern;
 
     @Bean
     @ConditionalOnMissingBean(CharacterEncodingFilter.class)
@@ -66,5 +77,59 @@ public class ControllersAutoConfiguration {
         registrationBean.addUrlPatterns(Settings.DEFAULT_WEB_SERVLET_PATH);
         registrationBean.setOrder(GrailsFilters.GRAILS_WEB_REQUEST_FILTER.getOrder());
         return registrationBean;
+    }
+
+    @Bean
+    GrailsWebMvcConfigurer webMvcConfig() {
+        return new GrailsWebMvcConfigurer(resourcesCachePeriod, resourcesEnabled, resourcesPattern);
+    }
+
+    static class GrailsWebMvcConfigurer implements WebMvcConfigurer {
+
+        private static final String[] SERVLET_RESOURCE_LOCATIONS = new String[] { "/" };
+
+        private static final String[] CLASSPATH_RESOURCE_LOCATIONS = new String[] {
+                "classpath:/META-INF/resources/", "classpath:/resources/",
+                "classpath:/static/", "classpath:/public/"
+        };
+
+        private static final String[] RESOURCE_LOCATIONS;
+
+        static {
+            RESOURCE_LOCATIONS = new String[CLASSPATH_RESOURCE_LOCATIONS.length
+                    + SERVLET_RESOURCE_LOCATIONS.length];
+            System.arraycopy(SERVLET_RESOURCE_LOCATIONS, 0, RESOURCE_LOCATIONS, 0,
+                    SERVLET_RESOURCE_LOCATIONS.length);
+            System.arraycopy(CLASSPATH_RESOURCE_LOCATIONS, 0, RESOURCE_LOCATIONS,
+                    SERVLET_RESOURCE_LOCATIONS.length, CLASSPATH_RESOURCE_LOCATIONS.length);
+        }
+
+        boolean addMappings;
+        Integer cachePeriod;
+        String resourcesPattern;
+
+        GrailsWebMvcConfigurer(Integer cachePeriod, Boolean addMappings, String resourcesPattern) {
+            this.addMappings = addMappings;
+            this.cachePeriod = cachePeriod;
+            this.resourcesPattern = resourcesPattern;
+        }
+
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            if (!addMappings) {
+                return;
+            }
+
+            if (!registry.hasMappingForPattern("/webjars/**")) {
+                registry.addResourceHandler("/webjars/**")
+                        .addResourceLocations("classpath:/META-INF/resources/webjars/")
+                        .setCachePeriod(cachePeriod);
+            }
+            if (!registry.hasMappingForPattern(resourcesPattern)) {
+                registry.addResourceHandler(resourcesPattern)
+                        .addResourceLocations(RESOURCE_LOCATIONS)
+                        .setCachePeriod(cachePeriod);
+            }
+        }
     }
 }
