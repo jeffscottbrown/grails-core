@@ -57,10 +57,6 @@ class ControllersGrailsPlugin extends Plugin {
         def config = application.config
 
         boolean useJsessionId = config.getProperty(Settings.GRAILS_VIEWS_ENABLE_JSESSIONID, Boolean, false)
-        String uploadTmpDir = config.getProperty(Settings.CONTROLLERS_UPLOAD_LOCATION, System.getProperty("java.io.tmpdir"))
-        long maxFileSize = config.getProperty(Settings.CONTROLLERS_UPLOAD_MAX_FILE_SIZE, Long, 128000L)
-        long maxRequestSize = config.getProperty(Settings.CONTROLLERS_UPLOAD_MAX_REQUEST_SIZE, Long, 128000L)
-        int fileSizeThreashold = config.getProperty(Settings.CONTROLLERS_UPLOAD_FILE_SIZE_THRESHOLD, Integer, 0)
         boolean isTomcat = ClassUtils.isPresent("org.apache.catalina.startup.Tomcat", application.classLoader)
         String grailsServletPath = config.getProperty(Settings.WEB_SERVLET_PATH, isTomcat ? Settings.DEFAULT_TOMCAT_SERVLET_PATH : Settings.DEFAULT_WEB_SERVLET_PATH)
 
@@ -76,8 +72,6 @@ class ControllersGrailsPlugin extends Plugin {
 
         "${CompositeViewResolver.BEAN_NAME}"(CompositeViewResolver)
 
-        multipartConfigElement(MultipartConfigElement, uploadTmpDir, maxFileSize, maxRequestSize, fileSizeThreashold)
-
         def handlerInterceptors = springConfig.containsBean("localeChangeInterceptor") ? [ref("localeChangeInterceptor")] : []
         def interceptorsClosure = {
             interceptors = handlerInterceptors
@@ -91,7 +85,7 @@ class ControllersGrailsPlugin extends Plugin {
         dispatcherServletRegistration(DispatcherServletRegistrationBean, ref("dispatcherServlet"), grailsServletPath) {
             loadOnStartup = 2
             asyncSupported = true
-            multipartConfig = multipartConfigElement
+            multipartConfig = ref('multipartConfigElement')
         }
 
         for (controller in application.getArtefacts(ControllerArtefactHandler.TYPE)) {

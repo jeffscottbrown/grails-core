@@ -3,6 +3,7 @@ package org.grails.plugins.web.controllers;
 import grails.config.Settings;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
+import jakarta.servlet.MultipartConfigElement;
 import org.grails.web.config.http.GrailsFilters;
 import org.grails.web.filters.HiddenHttpMethodFilter;
 import org.grails.web.servlet.mvc.GrailsWebRequestFilter;
@@ -33,13 +34,25 @@ public class ControllersAutoConfiguration {
     private boolean filtersForceEncoding;
 
     @Value("${" + Settings.RESOURCES_CACHE_PERIOD + ":0}")
-    int resourcesCachePeriod;
+    private int resourcesCachePeriod;
 
     @Value("${" + Settings.RESOURCES_ENABLED + ":true}")
-    boolean resourcesEnabled;
+    private boolean resourcesEnabled;
 
-    @Value("${" + Settings.RESOURCES_PATTERN + ":"+Settings.DEFAULT_RESOURCE_PATTERN+"}")
-    String resourcesPattern;
+    @Value("${" + Settings.RESOURCES_PATTERN + ":" + Settings.DEFAULT_RESOURCE_PATTERN + "}")
+    private String resourcesPattern;
+
+    @Value("${" + Settings.CONTROLLERS_UPLOAD_LOCATION + ":#{null}}")
+    private String uploadTmpDir;
+
+    @Value("${" + Settings.CONTROLLERS_UPLOAD_MAX_FILE_SIZE + ":128000}")
+    private long maxFileSize;
+
+    @Value("${" + Settings.CONTROLLERS_UPLOAD_MAX_REQUEST_SIZE + ":128000}")
+    private long maxRequestSize;
+
+    @Value("${" + Settings.CONTROLLERS_UPLOAD_FILE_SIZE_THRESHOLD + ":0}")
+    private int fileSizeThreshold;
 
     @Bean
     @ConditionalOnMissingBean(CharacterEncodingFilter.class)
@@ -80,7 +93,15 @@ public class ControllersAutoConfiguration {
     }
 
     @Bean
-    GrailsWebMvcConfigurer webMvcConfig() {
+    public MultipartConfigElement multipartConfigElement() {
+        if (uploadTmpDir == null) {
+            uploadTmpDir = System.getProperty("java.io.tmpdir");
+        }
+        return new MultipartConfigElement(uploadTmpDir, maxFileSize, maxRequestSize, fileSizeThreshold);
+    }
+
+    @Bean
+    public GrailsWebMvcConfigurer webMvcConfig() {
         return new GrailsWebMvcConfigurer(resourcesCachePeriod, resourcesEnabled, resourcesPattern);
     }
 
