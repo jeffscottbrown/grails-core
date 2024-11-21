@@ -1,23 +1,28 @@
 package org.grails.plugins.web.controllers;
 
 import grails.config.Settings;
+import grails.core.GrailsApplication;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
 import jakarta.servlet.MultipartConfigElement;
 import org.grails.web.config.http.GrailsFilters;
 import org.grails.web.filters.HiddenHttpMethodFilter;
+import org.grails.web.servlet.mvc.GrailsDispatcherServlet;
 import org.grails.web.servlet.mvc.GrailsWebRequestFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean;
 import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -53,6 +58,9 @@ public class ControllersAutoConfiguration {
 
     @Value("${" + Settings.CONTROLLERS_UPLOAD_FILE_SIZE_THRESHOLD + ":0}")
     private int fileSizeThreshold;
+
+    @Value("${" + Settings.WEB_SERVLET_PATH + ":#{null}}")
+    String grailsServletPath;
 
     @Bean
     @ConditionalOnMissingBean(CharacterEncodingFilter.class)
@@ -98,6 +106,24 @@ public class ControllersAutoConfiguration {
             uploadTmpDir = System.getProperty("java.io.tmpdir");
         }
         return new MultipartConfigElement(uploadTmpDir, maxFileSize, maxRequestSize, fileSizeThreshold);
+    }
+
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new GrailsDispatcherServlet();
+    }
+
+    @Bean
+    public DispatcherServletRegistrationBean dispatcherServletRegistration(GrailsApplication application, DispatcherServlet dispatcherServlet, MultipartConfigElement multipartConfigElement) {
+        if (grailsServletPath == null) {
+            boolean isTomcat = ClassUtils.isPresent("org.apache.catalina.startup.Tomcat", application.getClassLoader());
+            grailsServletPath = isTomcat ? Settings.DEFAULT_TOMCAT_SERVLET_PATH : Settings.DEFAULT_WEB_SERVLET_PATH;
+        }
+        DispatcherServletRegistrationBean dispatcherServletRegistration = new DispatcherServletRegistrationBean(dispatcherServlet, grailsServletPath);
+        dispatcherServletRegistration.setLoadOnStartup(2);
+        dispatcherServletRegistration.setAsyncSupported(true);
+        dispatcherServletRegistration.setMultipartConfig(multipartConfigElement);
+        return dispatcherServletRegistration;
     }
 
     @Bean

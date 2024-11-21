@@ -23,16 +23,12 @@ import groovy.util.logging.Slf4j
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.plugins.web.servlet.context.BootStrapClassRunner
 import org.grails.web.errors.GrailsExceptionResolver
-import org.grails.web.servlet.mvc.GrailsDispatcherServlet
 import org.grails.web.servlet.mvc.TokenResponseActionResultTransformer
 import org.grails.web.servlet.view.CompositeViewResolver
 import org.springframework.beans.factory.support.AbstractBeanDefinition
-import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean
 import org.springframework.context.ApplicationContext
-import org.springframework.util.ClassUtils
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
-import jakarta.servlet.MultipartConfigElement
 
 /**
  * Handles the configuration of controllers for Grails.
@@ -57,8 +53,6 @@ class ControllersGrailsPlugin extends Plugin {
         def config = application.config
 
         boolean useJsessionId = config.getProperty(Settings.GRAILS_VIEWS_ENABLE_JSESSIONID, Boolean, false)
-        boolean isTomcat = ClassUtils.isPresent("org.apache.catalina.startup.Tomcat", application.classLoader)
-        String grailsServletPath = config.getProperty(Settings.WEB_SERVLET_PATH, isTomcat ? Settings.DEFAULT_TOMCAT_SERVLET_PATH : Settings.DEFAULT_WEB_SERVLET_PATH)
 
         if (!Boolean.parseBoolean(System.getProperty(Settings.SETTING_SKIP_BOOTSTRAP))) {
             bootStrapClassRunner(BootStrapClassRunner)
@@ -79,14 +73,6 @@ class ControllersGrailsPlugin extends Plugin {
         // allow @Controller annotated beans
         annotationHandlerMapping(RequestMappingHandlerMapping, interceptorsClosure)
         annotationHandlerAdapter(RequestMappingHandlerAdapter)
-
-        // add the dispatcher servlet
-        dispatcherServlet(GrailsDispatcherServlet)
-        dispatcherServletRegistration(DispatcherServletRegistrationBean, ref("dispatcherServlet"), grailsServletPath) {
-            loadOnStartup = 2
-            asyncSupported = true
-            multipartConfig = ref('multipartConfigElement')
-        }
 
         for (controller in application.getArtefacts(ControllerArtefactHandler.TYPE)) {
             log.debug "Configuring controller $controller.fullName"
