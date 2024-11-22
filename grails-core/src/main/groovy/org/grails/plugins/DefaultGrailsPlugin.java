@@ -543,8 +543,7 @@ public class DefaultGrailsPlugin extends AbstractGrailsPlugin implements ParentA
                 c.setDelegate(bb);
                 bb.invokeMethod("beans", new Object[]{c});
             }
-        }
-        else {
+        } else {
             if (!pluginBean.isReadableProperty(DO_WITH_SPRING)) {
                 return;
             }
