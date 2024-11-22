@@ -1,4 +1,4 @@
-// Generated on Fri Nov 22 09:29:12 CET 2024 by: ./gradlew :grails-bom:dependabotBuild
+// Generated on Fri Nov 22 09:58:56 CET 2024 by: ./gradlew :grails-bom:dependabotBuild
 plugins {
     id 'java-library'
 }
@@ -25,6 +25,7 @@ dependencies {
     api "org.grails:grails-events-rxjava:${project['grails-async.version']}"
     api "org.grails:grails-events-rxjava2:${project['grails-async.version']}"
     api "org.grails:grails-datastore-gorm-hibernate5:${project['grails-datastore-gorm-hibernate5.version']}"
+    api "org.grails:grails-datastore-gorm-mongodb:${project['grails-datastore-gorm-mongodb.version']}"
     api "org.grails:grails-datastore-async:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-core:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-gorm:${project['grails-datastore.version']}"
