@@ -10,8 +10,6 @@ dependencies {
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     testCompileOnly "org.springframework:spring-test"
 
-    // now used by plugins for autoconfiguration
-    api "org.springframework.boot:spring-boot-autoconfigure"
     api "org.springframework:spring-webmvc"
     api "org.springframework:spring-context-support"
     implementation "com.github.ben-manes.caffeine:caffeine"
