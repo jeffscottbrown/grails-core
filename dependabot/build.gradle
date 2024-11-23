@@ -1,4 +1,4 @@
-// Generated on Mon Oct 21 14:36:55 PDT 2024 by: ./gradlew :grails-bom:dependabotBuild
+// Generated on Fri Nov 22 09:58:56 CET 2024 by: ./gradlew :grails-bom:dependabotBuild
 plugins {
     id 'java-library'
 }
@@ -7,6 +7,7 @@ dependencies {
     api "org.apache.ant:ant:${project['ant.version']}"
     api "org.apache.ant:ant-junit:${project['ant.version']}"
     api "org.asciidoctor:asciidoctorj:${project['asciidoctorj.version']}"
+    api "com.bertramlabs.plugins:asset-pipeline-gradle:${project['asset-pipeline-gradle.version']}"
     api "com.bertramlabs.plugins:asset-pipeline-grails:${project['asset-pipeline-grails.version']}"
     api "net.bytebuddy:byte-buddy:${project['byte-buddy.version']}"
     api "commons-codec:commons-codec:${project['commons-codec.version']}"
@@ -24,6 +25,7 @@ dependencies {
     api "org.grails:grails-events-rxjava:${project['grails-async.version']}"
     api "org.grails:grails-events-rxjava2:${project['grails-async.version']}"
     api "org.grails:grails-datastore-gorm-hibernate5:${project['grails-datastore-gorm-hibernate5.version']}"
+    api "org.grails:grails-datastore-gorm-mongodb:${project['grails-datastore-gorm-mongodb.version']}"
     api "org.grails:grails-datastore-async:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-core:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-gorm:${project['grails-datastore.version']}"
