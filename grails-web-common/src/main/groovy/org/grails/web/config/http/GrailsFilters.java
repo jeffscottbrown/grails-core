@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.grails.config.http;
+package org.grails.web.config.http;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
