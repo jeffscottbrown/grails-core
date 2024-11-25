@@ -10,6 +10,7 @@ dependencies {
     api "org.springframework:spring-tx"
     api "org.springframework:spring-beans"
     api "org.springframework:spring-context"
+    api "org.springframework.boot:spring-boot-autoconfigure"
 
     compileOnly "org.springframework:spring-test"
     compileOnly "org.apache.groovy:groovy-templates"
