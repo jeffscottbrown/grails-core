@@ -32,6 +32,8 @@ import grails.web.mapping.UrlMappingData;
 import grails.core.GrailsApplication;
 import grails.web.mapping.UrlMappingInfo;
 import grails.web.mapping.exceptions.UrlMappingException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.grails.web.servlet.mvc.GrailsWebRequest;
 import org.grails.web.util.WebUtils;
 import org.springframework.context.ApplicationContext;
@@ -49,6 +51,7 @@ import org.springframework.web.servlet.DispatcherServlet;
  */
 public class DefaultUrlMappingInfo extends AbstractUrlMappingInfo {
 
+    private static final Log LOG = LogFactory.getLog(DefaultUrlMappingInfo.class);
     private static final String SETTING_GRAILS_WEB_DISABLE_MULTIPART = "grails.web.disable.multipart";
     private static final String CONTROLLER_PREFIX = "controller:";
     private static final String ACTION_PREFIX = "action:";
@@ -238,6 +241,11 @@ public class DefaultUrlMappingInfo extends AbstractUrlMappingInfo {
                 break;
             }
         }
+
+        if (LOG.isWarnEnabled() && dispatchActionName != null) {
+            LOG.warn(String.format("Dispatch Action [%s] detected; Dispatch Actions will be removed in a future version of Grails.", dispatchActionName));
+        }
+
         return dispatchActionName;
     }
 
