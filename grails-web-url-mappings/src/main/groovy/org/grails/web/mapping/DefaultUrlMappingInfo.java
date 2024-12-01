@@ -212,6 +212,13 @@ public class DefaultUrlMappingInfo extends AbstractUrlMappingInfo {
         return evaluateNameForValue(id);
     }
 
+    /**
+     * @deprecated
+     * This method will be removed in a future grails version since the associated g:submitAction is being removed.
+     * Grails will no longer support redirecting to a different action name by adding a parameter with the prefix
+     * '_action'
+     */
+    @Deprecated(since = "7.0.0")
     private String checkDispatchAction(HttpServletRequest request) {
         if (request.getAttribute(WebUtils.EXCEPTION_ATTRIBUTE) != null || WebUtils.isForwardOrInclude(request)) {
             return null;
