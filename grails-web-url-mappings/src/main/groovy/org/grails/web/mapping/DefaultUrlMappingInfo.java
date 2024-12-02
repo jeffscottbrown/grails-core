@@ -221,7 +221,7 @@ public class DefaultUrlMappingInfo extends AbstractUrlMappingInfo {
      * Grails will no longer support redirecting to a different action name by adding a parameter with the prefix
      * '_action'
      */
-    @Deprecated(since = "7.0.0")
+    @Deprecated(since = "7.0.0", forRemoval = true)
     private String checkDispatchAction(HttpServletRequest request) {
         if (request.getAttribute(WebUtils.EXCEPTION_ATTRIBUTE) != null || WebUtils.isForwardOrInclude(request)) {
             return null;
