@@ -9,9 +9,12 @@ Experienced while upgrading modules for Grails 7
 - Jar artifacts produced by Grails Plugins will no longer have the suffix `-plain`
   - https://github.com/grails/grails-gradle-plugin/pull/347
 - [GROOVY-5169](https://issues.apache.org/jira/browse/GROOVY-5169)  [GROOVY-10449](https://issues.apache.org/jira/browse/GROOVY-10449)
-  - Fields with a public modifier were not returned with MetaClassImpl#getProperties() in groovy 3, but are now. 
+  - Fields with a public modifier were not returned with MetaClassImpl#getProperties() in groovy 3, but are now.
 
 ## NOTE: This document is a draft and the explanations are only highlights and will be expanded further prior to release of 7.0.
+
+## New Features 
+- [grails-gsp #551](https://github.com/grails/grails-gsp/issues/551) adopts a `formActionSubmit` tag to replace `actionSubmit`.  Dispatching actions via a parameter name on a form submit will be removed in a future version of grails.
 
 ### Cool New Features
 - You can now @Scaffold Controllers and Services and virtually eliminate any boiler plate code.
