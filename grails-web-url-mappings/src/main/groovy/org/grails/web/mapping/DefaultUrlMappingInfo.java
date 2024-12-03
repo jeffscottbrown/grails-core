@@ -243,7 +243,7 @@ public class DefaultUrlMappingInfo extends AbstractUrlMappingInfo {
         }
 
         if (LOG.isWarnEnabled() && dispatchActionName != null) {
-            LOG.warn(String.format("Dispatch Action [%s] detected; Dispatch Actions will be removed in a future version of Grails.", dispatchActionName));
+            LOG.warn(String.format("Dispatch Action [%s] detected; Dispatch Actions will be removed in a future version of Grails. Use g: formActionSubmit instead.", dispatchActionName));
         }
 
         return dispatchActionName;
