@@ -533,13 +533,12 @@ trait ResponseRenderer extends WebAttributes {
     }
 
     private void applySiteMeshLayout(HttpServletRequest request, boolean renderView, String explicitSiteMeshLayout) {
-        if(explicitSiteMeshLayout == null && request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) != null) {
+        if (explicitSiteMeshLayout == null && request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) != null) {
             // layout has been set already
             return
         }
-        String siteMeshLayout = explicitSiteMeshLayout != null ? explicitSiteMeshLayout : (renderView ? null : WebUtils.NONE_LAYOUT)
-        if(siteMeshLayout != null) {
-            request.setAttribute WebUtils.LAYOUT_ATTRIBUTE, siteMeshLayout
+        if (explicitSiteMeshLayout != null) {
+            request.setAttribute WebUtils.LAYOUT_ATTRIBUTE, explicitSiteMeshLayout
         }
     }
 
