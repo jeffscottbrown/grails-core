@@ -139,7 +139,7 @@ trait ResponseRenderer extends WebAttributes {
         else {
             renderMarkupInternal webRequest, closure, response
         }
-        setLayout webRequest.currentRequest, false, layoutArg
+        setLayout webRequest.currentRequest, layoutArg
     }
 
     private void renderJsonInternal(HttpServletResponse response, @DelegatesTo(value = StreamingJsonBuilder.StreamingJsonDelegate.class, strategy = Closure.DELEGATE_FIRST) Closure callable) {
@@ -163,7 +163,7 @@ trait ResponseRenderer extends WebAttributes {
         applyContentType response, argMap, body
         handleStatusArgument argMap, webRequest, response
         render body
-        setLayout webRequest.currentRequest, false, layoutArg
+        setLayout webRequest.currentRequest, layoutArg
     }
 
     /**
@@ -207,7 +207,7 @@ trait ResponseRenderer extends WebAttributes {
         handleStatusArgument argMap, webRequest, response
         applyContentType response, argMap, writable
         renderWritable writable, response
-        setLayout webRequest.currentRequest, false, layoutArg
+        setLayout webRequest.currentRequest, layoutArg
         webRequest.renderView = false
     }
 
@@ -235,7 +235,7 @@ trait ResponseRenderer extends WebAttributes {
                 CharSequence text = (textArg instanceof CharSequence) ? ((CharSequence)textArg) : textArg.toString()
                 render text
             }
-            setLayout webRequest.currentRequest, false, layoutArg
+            setLayout webRequest.currentRequest, layoutArg
         }
         else if (argMap.containsKey(ARGUMENT_VIEW)) {
             String viewName = argMap[ARGUMENT_VIEW].toString()
@@ -263,7 +263,7 @@ trait ResponseRenderer extends WebAttributes {
             }
 
             ((GroovyObject)this).setProperty "modelAndView", new ModelAndView(viewUri, model)
-            setLayout webRequest.currentRequest, true, layoutArg
+            setLayout webRequest.currentRequest, layoutArg
         }
         else if (argMap.containsKey(ARGUMENT_TEMPLATE)) {
             applyContentType response, argMap, null, false
@@ -300,7 +300,7 @@ trait ResponseRenderer extends WebAttributes {
                 // if automatic decoration occurred unwrap, since this is a partial
 
                 if (renderWithLayout) {
-                    setLayout webRequest.currentRequest, false, layoutArg
+                    setLayout webRequest.currentRequest, layoutArg
                 }
 
 
@@ -532,7 +532,7 @@ trait ResponseRenderer extends WebAttributes {
         renderArgument instanceof GPathResult ? APPLICATION_XML : defaultEncoding
     }
 
-    private void setLayout(HttpServletRequest request, boolean renderView, String layout) {
+    private void setLayout(HttpServletRequest request, String layout) {
         if (layout == null || request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) != null) {
             // layout has been set already
             return
