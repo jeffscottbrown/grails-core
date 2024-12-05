@@ -139,7 +139,7 @@ trait ResponseRenderer extends WebAttributes {
         else {
             renderMarkupInternal webRequest, closure, response
         }
-        applySiteMeshLayout webRequest.currentRequest, false, explicitSiteMeshLayout
+        setLayout webRequest.currentRequest, false, explicitSiteMeshLayout
     }
 
     private void renderJsonInternal(HttpServletResponse response, @DelegatesTo(value = StreamingJsonBuilder.StreamingJsonDelegate.class, strategy = Closure.DELEGATE_FIRST) Closure callable) {
@@ -163,7 +163,7 @@ trait ResponseRenderer extends WebAttributes {
         applyContentType response, argMap, body
         handleStatusArgument argMap, webRequest, response
         render body
-        applySiteMeshLayout webRequest.currentRequest, false, explicitSiteMeshLayout
+        setLayout webRequest.currentRequest, false, explicitSiteMeshLayout
     }
 
     /**
@@ -207,7 +207,7 @@ trait ResponseRenderer extends WebAttributes {
         handleStatusArgument argMap, webRequest, response
         applyContentType response, argMap, writable
         renderWritable writable, response
-        applySiteMeshLayout webRequest.currentRequest, false, explicitSiteMeshLayout
+        setLayout webRequest.currentRequest, false, explicitSiteMeshLayout
         webRequest.renderView = false
     }
 
@@ -235,7 +235,7 @@ trait ResponseRenderer extends WebAttributes {
                 CharSequence text = (textArg instanceof CharSequence) ? ((CharSequence)textArg) : textArg.toString()
                 render text
             }
-            applySiteMeshLayout webRequest.currentRequest, false, explicitSiteMeshLayout
+            setLayout webRequest.currentRequest, false, explicitSiteMeshLayout
         }
         else if (argMap.containsKey(ARGUMENT_VIEW)) {
             String viewName = argMap[ARGUMENT_VIEW].toString()
@@ -263,7 +263,7 @@ trait ResponseRenderer extends WebAttributes {
             }
 
             ((GroovyObject)this).setProperty "modelAndView", new ModelAndView(viewUri, model)
-            applySiteMeshLayout webRequest.currentRequest, true, explicitSiteMeshLayout
+            setLayout webRequest.currentRequest, true, explicitSiteMeshLayout
         }
         else if (argMap.containsKey(ARGUMENT_TEMPLATE)) {
             applyContentType response, argMap, null, false
@@ -300,7 +300,7 @@ trait ResponseRenderer extends WebAttributes {
                 // if automatic decoration occurred unwrap, since this is a partial
 
                 if (renderWithLayout) {
-                    applySiteMeshLayout webRequest.currentRequest, false, explicitSiteMeshLayout
+                    setLayout webRequest.currentRequest, false, explicitSiteMeshLayout
                 }
 
 
@@ -532,13 +532,13 @@ trait ResponseRenderer extends WebAttributes {
         renderArgument instanceof GPathResult ? APPLICATION_XML : defaultEncoding
     }
 
-    private void applySiteMeshLayout(HttpServletRequest request, boolean renderView, String explicitSiteMeshLayout) {
-        if (explicitSiteMeshLayout == null && request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) != null) {
+    private void setLayout(HttpServletRequest request, boolean renderView, String layout) {
+        if (layout == null && request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) != null) {
             // layout has been set already
             return
         }
-        if (explicitSiteMeshLayout != null) {
-            request.setAttribute WebUtils.LAYOUT_ATTRIBUTE, explicitSiteMeshLayout
+        if (layout != null) {
+            request.setAttribute WebUtils.LAYOUT_ATTRIBUTE, layout
         }
     }
 
