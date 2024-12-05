@@ -533,11 +533,9 @@ trait ResponseRenderer extends WebAttributes {
     }
 
     private void setLayout(HttpServletRequest request, String layout) {
-        if (layout == null || request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) != null) {
-            // layout has been set already
-            return
+        if (layout != null && request.getAttribute(WebUtils.LAYOUT_ATTRIBUTE) == null) {
+            request.setAttribute WebUtils.LAYOUT_ATTRIBUTE, layout
         }
-        request.setAttribute WebUtils.LAYOUT_ATTRIBUTE, layout
     }
 
     private String getContextPath(GrailsWebRequest webRequest, Map argMap) {
