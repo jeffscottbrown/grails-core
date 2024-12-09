@@ -135,11 +135,11 @@ class GrailsCreateStartScripts extends CreateStartScripts {
         generator.classpath = projectArtifacts + getClasspath().resolvedConfiguration.resolvedArtifacts.collect { artifact ->
             def dependency = artifact.moduleVersion.id
             String installedFile = "lib/$dependency.group/$dependency.name/jars/$artifact.file.name"
-            if(dependency.group == 'org.grails' && !project.file(installedFile).exists()) {
+            if (dependency.group == 'org.grails' && !project.file(installedFile).exists()) {
                 installedFile = "dist/$artifact.file.name"
             }
             installedFile
-        }
+        } + "lib/org.gradle/gradle-tooling-api/jars/gradle-tooling-api-${project.findProperty('gradleToolingApiVersion')}.jar".toString() // This is compileOnly, so it needs to be added manually
         generator.scriptRelPath = "bin/${unixScript.name}"
         generator.generateUnixScript(unixScript)
         generator.generateWindowsScript(windowsScript)
