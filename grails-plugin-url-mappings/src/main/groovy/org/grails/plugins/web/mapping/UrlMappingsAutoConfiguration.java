@@ -47,6 +47,7 @@ public class UrlMappingsAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = LinkGenerator.BEAN_NAME)
     public LinkGenerator grailsLinkGenerator() {
         if (cacheUrls == null) {
             cacheUrls = !Environment.isDevelopmentMode() && !Environment.getCurrent().isReloadEnabled();
