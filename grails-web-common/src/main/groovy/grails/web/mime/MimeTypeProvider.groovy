@@ -22,10 +22,10 @@ package grails.web.mime
  * @author Graeme Rocher
  * @since 2.3
  */
-interface MimeTypeProvider {
+trait MimeTypeProvider {
 
     /**
      * @return The {@link MimeType} instances provided by this object
      */
-    MimeType[] getMimeTypes()
+    abstract MimeType[] getMimeTypes()
 }

@@ -23,12 +23,12 @@ import grails.web.mime.MimeTypeProvider
  * @author Graeme Rocher
  * @since 2.3
  */
-interface Renderer<T> extends MimeTypeProvider {
+trait Renderer<T> extends MimeTypeProvider {
 
     /**
      * @return The target type
      */
-    Class<T> getTargetType()
+    abstract Class<T> getTargetType()
 
     /**
      * Renders the object
@@ -36,5 +36,5 @@ interface Renderer<T> extends MimeTypeProvider {
      * @param object The object to render
      * @param context The {@link RenderContext}
      */
-    void render(T object, RenderContext context)
+    abstract void render(T object, RenderContext context)
 }

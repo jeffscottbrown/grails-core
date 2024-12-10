@@ -21,9 +21,9 @@ package grails.rest.render
  * @author Graeme Rocher
  * @since 2.3
  */
-public interface ContainerRenderer<C, T> extends Renderer<C>{
+trait ContainerRenderer<C, T> extends Renderer<C>{
     /**
      * @return The underlying type wrapped by the container. For example with List<Book>, this method would return Book
      */
-    Class<T> getComponentType()
+    abstract Class<T> getComponentType()
 }
