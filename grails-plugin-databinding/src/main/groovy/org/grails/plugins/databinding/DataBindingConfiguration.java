@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 @AutoConfiguration
@@ -31,6 +32,7 @@ public class DataBindingConfiguration {
         this.configurationProperties = configurationProperties;
     }
 
+    @Lazy
     @Bean("grailsWebDataBinder")
     protected GrailsWebDataBinder grailsWebDataBinder(
             GrailsApplication grailsApplication,
