@@ -33,4 +33,4 @@ Experienced while upgrading modules for Grails 7
 - Completely up to date modern stack that has been optimized for easier future transitions.
 - GSP can now be used OUTSIDE of Grails! see grails-boot
 - Works with Spring Security 6 out of the box. No plugin needed!
-- Tested and works with Java [17-23](https://github.com/grails/grails-core/blob/0549617f27aeb5b90b64797fa4147dde40fc9c86/.github/workflows/gradle.yml#L18)
+- Tested and works with Java 17-23 [grails-core](https://github.com/grails/grails-core/blob/7.0.x/.github/workflows/gradle.yml#L18) and [grails-functional-tests](https://github.com/grails/grails-functional-tests/blob/7.0.x/.github/workflows/gradle.yml#L21)
