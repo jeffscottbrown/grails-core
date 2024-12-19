@@ -16,9 +16,11 @@ apply plugin: 'idea'
 ext {
     isJava8Compatible = org.gradle.api.JavaVersion.current().isJava8Compatible()
     grailsVersion = project.projectVersion
-    isBuildSnapshot = grailsVersion.endsWith("-SNAPSHOT")
-    isReleaseVersion = !isBuildSnapshot
     isCiBuild = System.getenv().get("CI") as Boolean
+    isGitHubRepoPublish = System.getenv("GITHUB_PUBLISH") == 'true'
+    isGrailsRepoPublish = grailsVersion.endsWith("-SNAPSHOT") && !isGitHubRepoPublish
+    isReleaseVersion = !isGrailsRepoPublish && !isGitHubRepoPublish
+
     springLoadedCommonOptions = "-Xverify:none -Dspringloaded.synchronize=true -Djdk.reflect.allowGetCallerClass=true"
 
     nexusUsername = System.getenv("SONATYPE_USERNAME") ?: project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : ''
@@ -217,17 +219,27 @@ subprojects { subproject ->
             }
         }
         publishing {
-
-            if (isBuildSnapshot) {
+            if (isGrailsRepoPublish || isGitHubRepoPublish) {
                 repositories {
                     maven {
                         credentials {
-                            def u = subproject.hasProperty("artifactoryPublishUsername") ? subproject.getProperty('artifactoryPublishUsername') : System.getenv("ARTIFACTORY_USERNAME")
-                            def p = subproject.hasProperty("artifactoryPublishPassword") ? subproject.getProperty('artifactoryPublishPassword') : System.getenv("ARTIFACTORY_PASSWORD")
-                            username = u
-                            password = p
+                            if (isGrailsRepoPublish) {
+                                def u = subproject.hasProperty("artifactoryPublishUsername") ? subproject.getProperty('artifactoryPublishUsername') : System.getenv("ARTIFACTORY_USERNAME")
+                                def p = subproject.hasProperty("artifactoryPublishPassword") ? subproject.getProperty('artifactoryPublishPassword') : System.getenv("ARTIFACTORY_PASSWORD")
+                                username = u
+                                password = p
+                            } else {
+                                def u = System.getenv('GITHUB_USERNAME') ?: ''
+                                def p = System.getenv('GITHUB_PASSWORD') ?: ''
+                                username = u
+                                password = p
+                            }
                         }
-                        url "https://repo.grails.org/grails/libs-snapshots-local"
+                        if (isGrailsRepoPublish) {
+                            url "https://repo.grails.org/grails/libs-snapshots-local"
+                        } else {
+                            url 'https://maven.pkg.github.com/grails/grails-core'
+                        }
                     }
                 }
             }
@@ -272,18 +284,20 @@ subprojects { subproject ->
 
         afterEvaluate {
             signing {
-                required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+                required { (isReleaseVersion || isGitHubRepoPublish) && gradle.taskGraph.hasTask("publish") }
                 sign publishing.publications.maven
             }
         }
 
         tasks.withType(Sign) {
-            onlyIf { isReleaseVersion }
+            onlyIf { isReleaseVersion || isGitHubRepoPublish }
         }
 
         //do not generate extra load on Nexus with new staging repository if signing fails
-        tasks.withType(io.github.gradlenexus.publishplugin.InitializeNexusStagingRepository).configureEach {
-            shouldRunAfter(tasks.withType(Sign))
+        if (isReleaseVersion) {
+            tasks.withType(io.github.gradlenexus.publishplugin.InitializeNexusStagingRepository).configureEach {
+                shouldRunAfter(tasks.withType(Sign))
+            }
         }
     }
 

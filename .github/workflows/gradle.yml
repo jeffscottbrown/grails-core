@@ -11,6 +11,8 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    outputs:
+      found_skip_publish: ${{ steps.check_prevent_property.outputs.value }}
     permissions:
       contents: read  #  to fetch code (actions/checkout)
     strategy:
@@ -21,6 +23,14 @@ jobs:
     steps:
       - name: "📥 Checkout repository"
         uses: actions/checkout@v4
+      - name: "🔍 Check if we should skip publish"
+        id: check_prevent_property
+        run: |
+          if grep -q '^preventSnapshotPublish=true' gradle.properties; then
+            echo "value=true" >> $GITHUB_OUTPUT
+          else
+            echo "value=false" >> $GITHUB_OUTPUT
+          fi
       - name: "☕️ Setup JDK"
         uses: actions/setup-java@v4
         with:
@@ -37,7 +47,7 @@ jobs:
           DEVELOCITY_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}
         run: ./gradlew build assemble groovydoc
   publish:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.build.outputs.found_skip_publish != 'true'
     needs: build
     permissions:
       contents: read # limit to read access
@@ -66,7 +76,7 @@ jobs:
           -Dorg.gradle.internal.publish.checksums.insecure=true
           publish
   docs:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.build.outputs.found_skip_publish != 'true'
     needs: publish
     runs-on: ubuntu-latest
     permissions:
