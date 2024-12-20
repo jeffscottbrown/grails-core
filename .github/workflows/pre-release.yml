@@ -5,6 +5,9 @@ on:
       targetVersion:
         description: 'Expected Release Version'
         required: true
+      preventSnapshots:
+        description: 'Prevent Snapshot Publishing'
+        required: false
 env:
   GIT_USER_NAME: 'grails-build'
   GIT_USER_EMAIL: 'grails-build@users.noreply.github.com'
@@ -274,9 +277,11 @@ jobs:
       - name: "📥 Checkout repository"
         uses: actions/checkout@v4
       - name: "🛑 Set Prevent Snapshot Publishing Flag"
+        if: ${{ github.event.inputs.preventSnapshots }}
         run: |
           sed -i "s/^preventSnapshotPublish.*$/preventSnapshotPublish\=true/" gradle.properties
       - name: "📩 Commit flag to prevent snapshot publishing"
+        if: ${{ github.event.inputs.preventSnapshots }}
         run: |
           git config user.name "${{ env.GIT_USER_NAME }}"
           git config user.email "${{ env.GIT_USER_EMAIL }}"
