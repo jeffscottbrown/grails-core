@@ -18,6 +18,7 @@ dependencies {
     api "org.gebish:geb-spock:${project['geb-spock.version']}"
     api "org.grails.plugins:async:${project['grails-async.version']}"
     api "org.grails.plugins:events:${project['grails-async.version']}"
+    api "org.grails:grails-async:${project['grails-async.version']}"
     api "org.grails:grails-async-gpars:${project['grails-async.version']}"
     api "org.grails:grails-async-rxjava:${project['grails-async.version']}"
     api "org.grails:grails-async-rxjava2:${project['grails-async.version']}"
@@ -34,6 +35,7 @@ dependencies {
     api "org.grails:grails-datastore-gorm-support:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-gorm-test:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-gorm-validation:${project['grails-datastore.version']}"
+    api "org.grails:grails-datastore-gorm-tck:${project['grails-datastore.version']}"
     api "org.grails:grails-datastore-web:${project['grails-datastore.version']}"
     api "org.grails:grails-gdoc-engine:${project['grails-gdoc-engine.version']}"
     api "org.grails:grails-gradle-plugin:${project['grails-gradle-plugin.version']}"
@@ -84,6 +86,7 @@ dependencies {
     api "org.spockframework:spock-spring:${project['spock.version']}"
     api "com.github.spotbugs:spotbugs-annotations:${project['spotbugs-annotations.version']}"
     api "org.springframework.boot:spring-boot-cli:${project['spring-boot.version']}"
+    api "org.springframework.boot:spring-boot-gradle-plugin:${project['spring-boot.version']}"
     api "org.springframework:springloaded:${project['springloaded.version']}"
     api "org.grails:views-json-testing-support:${project['views-json-testing-support.version']}"
 }

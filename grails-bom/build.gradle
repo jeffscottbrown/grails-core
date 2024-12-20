@@ -44,10 +44,11 @@ ext {
         org.grails.plugins:async,events:::grails-async
         org.grails.plugins:converters::
         org.grails.plugins:gsp::
-        org.grails:grails-async,grails-events:gpars,rxjava,rxjava2::grails-async
+        org.grails:grails-async:,gpars,rxjava,rxjava2::grails-async
+        org.grails:grails-events:gpars,rxjava,rxjava2::grails-async
         org.grails:grails-datastore-gorm-hibernate5::
         org.grails:grails-datastore-gorm-mongodb::
-        org.grails:grails-datastore:async,core,gorm,gorm-async,gorm-support,gorm-rx,gorm-test,gorm-validation,web:
+        org.grails:grails-datastore:async,core,gorm,gorm-async,gorm-support,gorm-rx,gorm-test,gorm-validation,web,gorm-tck:
         org.grails:grails-gdoc-engine::
         org.grails:grails-gradle-plugin::
         org.grails:grails-testing-support,grails-gorm-testing-support,grails-web-testing-support::
@@ -58,7 +59,7 @@ ext {
         org.mongodb:mongodb-driver:core,sync::mongodb
         org.objenesis:objenesis::
         org.spockframework:spock-core,spock-spring:::spock
-        org.springframework.boot:spring-boot-cli:::spring-boot
+        org.springframework.boot:spring-boot-cli,spring-boot-gradle-plugin:::spring-boot
         org.springframework:springloaded::
         org.xhtmlrenderer:flying-saucer-pdf-openpdf::
     """.stripIndent(true).trim().readLines().collect {
