@@ -1,4 +1,5 @@
-name: "🖨️ Pre Release"
+name: "Pre Release"
+run-name: "Pre Release - ${{ github.event.inputs.purpose }}"
 on:
   workflow_dispatch:
     inputs:
@@ -7,6 +8,10 @@ on:
         required: true
       preventSnapshots:
         description: 'Prevent Snapshot Publishing'
+        required: false
+      purpose:
+        description: 'Descriptive Purpose'
+        default: 'grails'
         required: false
 env:
   GIT_USER_NAME: 'grails-build'
