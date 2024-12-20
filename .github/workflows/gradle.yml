@@ -10,16 +10,12 @@ on:
       - '[3-9]+.[3-9]+.x'
   workflow_dispatch:
 jobs:
-  build:
+  skip_check:
+    runs-on: ubuntu-latest
     outputs:
       found_skip_publish: ${{ steps.check_prevent_property.outputs.value }}
     permissions:
-      contents: read  #  to fetch code (actions/checkout)
-    strategy:
-      matrix:
-        java: [17, 21, 23]
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+      contents: read
     steps:
       - name: "📥 Checkout repository"
         uses: actions/checkout@v4
@@ -31,6 +27,18 @@ jobs:
           else
             echo "value=false" >> $GITHUB_OUTPUT
           fi
+  build:
+    needs: skip_check
+    permissions:
+      contents: read  #  to fetch code (actions/checkout)
+    strategy:
+      matrix:
+        java: [17, 21, 23]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v4
       - name: "☕️ Setup JDK"
         uses: actions/setup-java@v4
         with:
@@ -47,7 +55,7 @@ jobs:
           DEVELOCITY_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}
         run: ./gradlew build assemble groovydoc
   publish:
-    if: github.event_name == 'push' && needs.build.outputs.found_skip_publish != 'true'
+    if: github.event_name == 'push' && needs.skip_check.outputs.found_skip_publish != 'true'
     needs: build
     permissions:
       contents: read # limit to read access
@@ -76,7 +84,7 @@ jobs:
           -Dorg.gradle.internal.publish.checksums.insecure=true
           publish
   docs:
-    if: github.event_name == 'push' && needs.build.outputs.found_skip_publish != 'true'
+    if: github.event_name == 'push' && needs.skip_check.outputs.found_skip_publish != 'true'
     needs: publish
     runs-on: ubuntu-latest
     permissions:
