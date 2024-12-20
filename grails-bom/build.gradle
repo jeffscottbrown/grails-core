@@ -94,7 +94,7 @@ ext {
 }
 
 allDependencies.each {
-    if (!isBuildSnapshot && version.endsWith("-SNAPSHOT")) {
+    if (!isGitHubRepoPublish && !isGrailsRepoPublish && version.endsWith("-SNAPSHOT")) {
         throw new RuntimeException("Cannot have a snapshot dependency $it.version on a $it.name [$it.groupId] for a release!")
     }
 }
