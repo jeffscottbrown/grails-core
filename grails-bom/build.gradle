@@ -45,7 +45,7 @@ ext {
         org.grails.plugins:converters::
         org.grails.plugins:gsp::
         org.grails:grails-async:,gpars,rxjava,rxjava2::grails-async
-        org.grails:grails-events:gpars,rxjava,rxjava2::grails-async
+        org.grails:grails-events:gpars,rxjava,rxjava2,transform::grails-async
         org.grails:grails-datastore-gorm-hibernate5::
         org.grails:grails-datastore-gorm-mongodb::
         org.grails:grails-datastore:async,core,gorm,gorm-async,gorm-support,gorm-rx,gorm-test,gorm-validation,web,gorm-tck:
