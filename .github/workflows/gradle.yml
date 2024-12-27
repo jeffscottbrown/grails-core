@@ -10,7 +10,25 @@ on:
       - '[3-9]+.[3-9]+.x'
   workflow_dispatch:
 jobs:
+  skip_check:
+    runs-on: ubuntu-latest
+    outputs:
+      found_skip_publish: ${{ steps.check_prevent_property.outputs.value }}
+    permissions:
+      contents: read
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v4
+      - name: "🔍 Check if we should skip publish"
+        id: check_prevent_property
+        run: |
+          if grep -q '^preventSnapshotPublish=true' gradle.properties; then
+            echo "value=true" >> $GITHUB_OUTPUT
+          else
+            echo "value=false" >> $GITHUB_OUTPUT
+          fi
   build:
+    needs: skip_check
     permissions:
       contents: read  #  to fetch code (actions/checkout)
     strategy:
@@ -35,9 +53,9 @@ jobs:
         env:
           DEVELOCITY_BUILD_CACHE_NODE_USER: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER }}
           DEVELOCITY_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}
-        run: ./gradlew build groovydoc
+        run: ./gradlew build assemble groovydoc
   publish:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.skip_check.outputs.found_skip_publish != 'true'
     needs: build
     permissions:
       contents: read # limit to read access
@@ -66,7 +84,7 @@ jobs:
           -Dorg.gradle.internal.publish.checksums.insecure=true
           publish
   docs:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.skip_check.outputs.found_skip_publish != 'true'
     needs: publish
     runs-on: ubuntu-latest
     permissions:
