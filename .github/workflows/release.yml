@@ -8,6 +8,7 @@ jobs:
     permissions:
       contents: write  #  to create release
       issues: write  #  to modify milestones
+      packages: write # purge pre-release packages
     runs-on: ubuntu-latest
     outputs:
       release_version: ${{ steps.release_version.outputs.value }}
@@ -409,6 +410,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           inputs: ${{ steps.prep_inputs.outputs.value }}
   website:
+    if: false # disable for 7.0.0-M1 release
     needs: publish
     runs-on: ubuntu-latest
     permissions:
