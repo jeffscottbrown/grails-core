@@ -90,11 +90,23 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.codehaus.groovy.ast.tools.GeneralUtils.*;
-import static org.grails.compiler.injection.GrailsASTUtils.*;
+import static org.grails.compiler.injection.GrailsASTUtils.applyDefaultMethodTarget;
+import static org.grails.compiler.injection.GrailsASTUtils.applyMethodTarget;
+import static org.grails.compiler.injection.GrailsASTUtils.buildGetMapExpression;
+import static org.grails.compiler.injection.GrailsASTUtils.buildGetPropertyExpression;
+import static org.grails.compiler.injection.GrailsASTUtils.buildSetPropertyExpression;
+import static org.grails.compiler.injection.GrailsASTUtils.hasAnnotation;
+import static org.grails.compiler.injection.GrailsASTUtils.hasParameters;
+import static org.grails.compiler.injection.GrailsASTUtils.isInheritedFromTrait;
+import static org.grails.compiler.injection.GrailsASTUtils.removeAnnotation;
 
 /**
  * Enhances controller classes by converting closures actions to method actions and binding
