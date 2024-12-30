@@ -403,7 +403,7 @@ class TestController {
 }
 
 
-class ParentCommand {
+class ParentCommand implements Validateable {
     int testId
 }
 
