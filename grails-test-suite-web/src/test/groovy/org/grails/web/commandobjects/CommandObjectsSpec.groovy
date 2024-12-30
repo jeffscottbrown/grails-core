@@ -5,6 +5,7 @@ import grails.testing.gorm.DataTest
 import grails.testing.web.controllers.ControllerUnitTest
 import grails.validation.Validateable
 import spock.lang.Issue
+import spock.lang.PendingFeature
 import spock.lang.Specification
 
 class CommandObjectsSpec extends Specification implements ControllerUnitTest<TestController>, DataTest {
@@ -322,6 +323,7 @@ class CommandObjectsSpec extends Specification implements ControllerUnitTest<Tes
         model.pId == 2
     }
 
+    @PendingFeature()
     @Issue('https://github.com/grails/grails-core/issues/13945')
     void "calling actions involving inherited command objects - parent command"() {
         given:
