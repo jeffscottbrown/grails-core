@@ -14,6 +14,17 @@ Experienced while upgrading modules for Grails 7
   - https://github.com/grails/grails-gradle-plugin/pull/347
 - [GROOVY-5169](https://issues.apache.org/jira/browse/GROOVY-5169)  [GROOVY-10449](https://issues.apache.org/jira/browse/GROOVY-10449)
   - Fields with a public modifier were not returned with MetaClassImpl#getProperties() in groovy 3, but are now.
+- Some older libraries may include an older version of groovy, but still be compatible with Groovy 4.  One example is `GPars`.  In your gradle file, you can force a dependency upgrade via this code:
+
+        configurations.configureEach {
+            resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                if (details.requested.group == 'org.codehaus.groovy') {
+                    details.useTarget(group: 'org.apache.groovy', name: details.requested.name, version: '4.0.24')
+                }
+            }
+        }
+- The `jakarta` package switch means that older libraries using `javax` will need to be updated to use the correct namespace.  The side effect of this change is most grails plugins will likely need updated to be compatible with Grails 7.
+- When migrating a new project to Grails 7, it's advised to generate a stock 7.0 app from [start.grails.org](https://start.grails.org) and compare the project with a grails app generated from the same grails version that your application uses.  This helps catch the dependency clean up that has occurred.  Including the additions of new dependencies.  Note: due to an issue with project resolution the `grails-bom` will need explicitly imported in buildSrc or any project that does not apply the grails gradle plugins (grails-plugin, grails-web, or grails-gsp).  By default, the grails gradle plugins (grails-plugin, grails-web, grails-gsp) will apply the bom automatically.
 
 ## NOTE: This document is a draft and the explanations are only highlights and will be expanded further prior to release of 7.0.
 
