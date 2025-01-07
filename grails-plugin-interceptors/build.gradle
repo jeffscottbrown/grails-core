@@ -1,4 +1,0 @@
-dependencies {
-    compile project(":grails-plugin-controllers")
-    compile project(":grails-plugin-url-mappings")
-}
